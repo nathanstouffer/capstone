@@ -18,27 +18,37 @@
 
     % blockchains are interesting and useful
     Blockchains provide a way to decentralize ledger-keeping systems.
-    They are best known for their use in cryptocurrencies, but blockchains also have applications in supply chain tracking, providing data integrity, and any situation where information needs to be immutable.
-    To provide immutability, blockchains use Proof of Work to construct an ever growing chain of blocks in a peer to peer network.
+    They are best known for their use in cryptocurrencies, but blockchains also have applications in supply chain tracking, providing data integrity, and any situation where immutable data is useful.
+    To provide immutability, some blockchains use Proof of Work to construct an ever growing chain of blocks in a peer to peer network.
     Miners are expected to expend computational work to create a new block.
-    Since blocks are intetionally difficult to create, users of a blockchain can trust the information held in the longest blockchain.
+    Since blocks are intentionally difficult to create, users of a blockchain can trust the information held in the longest blockchain.
 
     % problem with blockchains
-    Miners technically have complete control over a blockchain, but if the miners are sufficiently decentralized, they cannot make a substantial impact on the blockchain by deviating from the protocol.
-    Thus a blockchains perform better when control of the chain is decentralized.
+    Miners have collective control over a blockchain.
+    If miners are sufficiently decentralized, then only a large coalition of miners could  gain explicit control of a blockchain.
+    Explicit control gives the coalition the power to decide which blocks are added to the chain, reducing the integrity of the system.
+    Thus a blockchain perform better when control of the chain is decentralized.
     However, decentralized mining can become difficult to achieve when blockchains grow to an unmanageable length.
     To begin mining, one must download and process the entire chain.
-    For Bitcoin (the most popular blockchain), it can take days to become a full fledged miner.
-    This decreases decentralization in two ways.
+    This is not problem when the chain is relatively small, but a larger chain (such as Bitcoin) can take days to process.
+
+    Excessively long chains limit decentralization in two ways.
     First, lightweight devices are prevented from becoming miners.
-    Even desktops and laptops will soon not be able to become a Bitcoin miner.
-    Second, people are less likely to become a miner because of the incredibly long bootstrapping time.
-    Together, these issues decrease decentralization in a blockchain which reduces the effectiveness of a blockchain.
+    Soon, even some desktops and laptops will not be able to become a Bitcoin miner.
+    Second, incredibly long bootstrapping time deters participation from users with sufficient space.
+    Together, these issues decrease decentralization which reduces the effectiveness of a blockchain.
 
     % idea for a solution
+    Over the summer, I worked with collaborators to devise a protocol that prunes blocks while preserving the chain's integrity.
+    We ended the summer with a solution sketch that has potential but still needs significant work.
+    At a high level, our solution has miners of recent blocks vote for a blockchain summary.
+    If sufficiently many votes agree, bootstrapping nodes can trust the blockchain summary.
+
 
     % implementation
-
-    % expected results
+    For my capstone project, I will extend the solution sketch from this summer.
+    There are still issues to resolve and I must provide formal security proofs.
+    Following this, I will implement a model of our solution.
+    Using the model, I will run simulations and extract experimental results.
 
 \end{document}
