@@ -1,0 +1,66 @@
+\section{Background}
+\label{sec:background}
+
+\subsection{Blockchain}
+
+At a high level, a blockchain is a sequence of blocks that is difficult to edit, providing practical immutability for the data stored in the blocks.
+We choose to view blockchain as a finite state machine where blocks contain data that represent transitions between states of applications running on top of a blockchain, such as cryptocurrency transfers.
+Abstractly, the $k^{th}$ block $B_k$ is a transition from state $S_{k-1}$ to state $S_k$ with certain validity requirements.
+See Figure \ref{fig:statemachine} for a visual.
+Cryptocurrencies realize state as a balance sheet and blocks as sets of transactions that transfer currency between accounts.
+Among other validity requirements, no user can have a negative balance and that money cannot be spent twice.
+
+\input{tikz/state}
+
+\subsection{Technical Problem}
+
+To understand the technical problem, we must understand two properties of blockchains.
+First, we observe that miners must have every block in the chain to contribute new blocks.
+And, second, blockchains grow in perpetuity.
+These properties mean that new miners must download and process an ever increasing amount of data as time passes.
+Even now, when Bitcoin is just over a decade old, it can take days or weeks to become a miner.
+Such a barrier prevents some nodes from mining, limiting decentralization.
+Less decentralization reduces the effectiveness of a blockchain.
+
+When viewing a blockchain as a finite state machine, we can change the requirements of what a miner needs to know.
+All a miner must know is a state $S_k$ and every block following that state.
+Then a bootstrapping miner could compute the current state.
+If $S_k$ is close to the end of the chain, then the miner requires significantly less bootstrapping time by only requesting blocks following $S_k$.
+
+How does a bootstrapping miner obtain the state $S_k$?
+They can't just ask a blockchain node, because they could receive a faulty state.
+This is the problem we would like to solve: Can we provide a mechanism so that a bootstrapping node can trust a recent state?
+
+\subsection{Related Work}
+
+Our solution gains inspiration from a paper written by Matzutt et al. that provides a way to verify Bitcoin states.
+They suggest that recent miners be allowed to vote for a state and then bootstrapping nodes trust the majority of votes.
+Each vote is recorded in a block and each block has the capacity to store a single vote \cite{Matzutt2020HowTS}.
+Storing votes in blocks gives them immutability, so a bootstrapping node knows that they are counting every vote.
+
+There are two problems with this idea.
+First, a vote can only be generated as quickly as new blocks.
+In Bitcoin, this averages to about 10 minutes per block, meaning a bootstrapping node might have to wait a week for there to be sufficiently many votes to trust a state.
+Second, this solution relies on implementation details in the Bitcoin protocol and may not apply to blockchains in general.
+
+\subsection{Project background}
+
+This project will continue my research from this summer as part of a Research Experiences for Undergraduates (REU) at Montana State University.
+My collaborators and I came up with the following idea.
+
+Like Matzutt and his collaborators, we allow recent miners to vote \cite{Matzutt2020HowTS}.
+However, we choose to store votes in a distributed hash table.
+Storing votes in a distributed hash table is convenient because it allows recent miners to vote immediately, but it also gives attackers an opportunity to delete votes.
+To combat vote deletion, we drew on the idea of a tangle \cite{popov2016tangle}.
+A tangle is a directed acyclic graph where the nodes are added to tangle by selecting the two most recently added nodes as parents.
+In this context, nodes are realized as votes.
+A tangle manager receives votes from recent miners and adds each of them to the tangle by attaching them to parent votes.
+
+\input{tikz/tangle}
+
+A vote is invalid if one if its parents is invalid or deleted.
+Deleting a vote causes a chain reaction in the tangle that deletes votes that support the attacker, preventing the attacker from swinging the election, by disproportionately deleting votes on one side of the election.
+A bootstrapping node can request the vote tangle and then make a decision based on valid votes.
+
+While we do have a sketch of a solution idea, more work needs to be done to prove its correctness and security as well as to demonstrate these properties through a practical implementation.
+Preliminary results indicate that it is resistant to some types of attacks but we need to consider smarter and more powerful attackers.
