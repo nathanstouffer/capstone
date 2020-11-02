@@ -35,7 +35,7 @@ This is the problem we would like to solve: Can we provide a mechanism so that a
 
 Our solution gains inspiration from a paper written by Matzutt et al. that provides a way to verify Bitcoin states.
 They suggest that recent miners be allowed to vote for a state and then bootstrapping nodes trust the majority of votes.
-Each vote is recorded in a block and each block has the capacity to store a single vote \cite{Matzutt2020HowTS}.
+Each vote is recorded in a block and each block has the capacity to store a single vote \cite{matzutt2020HowTSPrune}.
 Storing votes in blocks gives them immutability, so a bootstrapping node knows that they are counting every vote.
 
 There are two problems with this idea.
@@ -48,7 +48,7 @@ Second, this solution relies on implementation details in the Bitcoin protocol a
 This project will continue my research from this summer as part of a Research Experiences for Undergraduates (REU) at Montana State University.
 My collaborators and I came up with the following idea.
 
-Like Matzutt and his collaborators, we allow recent miners to vote \cite{Matzutt2020HowTS}.
+Like Matzutt and his collaborators, we allow recent miners to vote \cite{matzutt2020HowTSPrune}.
 However, we choose to store votes in a distributed hash table.
 Storing votes in a distributed hash table is convenient because it allows recent miners to vote immediately, but it also gives attackers an opportunity to delete votes.
 To combat vote deletion, we drew on the idea of a tangle \cite{popov2016tangle}.
