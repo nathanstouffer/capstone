@@ -3,12 +3,31 @@
 
 \subsection{Blockchain}
 
-At a high level, a blockchain is a sequence of blocks that is difficult to edit, providing practical immutability for the data stored in the blocks.
-We choose to view blockchain as a finite state machine where blocks contain data that represent transitions between states of applications running on top of a blockchain, such as cryptocurrency transfers.
+At a high level, a blockchain is a sequence of blocks that is immutable in practical applications.
+Immutability in blockchains is often provided through Proof of Work.
+Proof of Work was introduced in \cite{dwork1992PoW} and first used for blockchain in the Bitcoin whitepaper \cite{nakamoto2009Bitcoin}.
+In a Proof of Work blockchain, a block is valid if its cryptographic hash is below a preset threshold.
+Each block primarily consists of data that cannot change (financial transactions, medical records, etc).
+However, every block contains a field for a fixed-length string of bits that make the output of the hash function below the threshold.
+The fixed-length string is called a nonce.
+If someone finds a nonce, they have ``mined'' a block.
+Since the hash function is cryptographic, it is difficult to reverse.
+The best strategy for someone mining a block is to guess and check nonces until a sufficiently low output is found.
+Figure \ref{fig:blockchain} displays the typical structure of a blockchain.
+
+\input{tikz/blockchain}
+
+A broader perspective of a blockchain is an implementation of a finite state machine.
+In the state machine, blocks are transitions between the states of applications running on top of a blockchain.
 Abstractly, the $k^{th}$ block $B_k$ is a transition from state $S_{k-1}$ to state $S_k$ with certain validity requirements.
 See Figure \ref{fig:statemachine} for a visual.
-Cryptocurrencies realize state as a balance sheet and blocks as sets of transactions that transfer currency between accounts.
-Among other validity requirements, no user can have a negative balance and that money cannot be spent twice.
+A tangible example is a cryptocurrency.
+Cryptocurrencies realize state as a record of the amount of currency each public key controls.
+Blocks are a set of transactions that transfer currency between public keys.
+In state $S_0$, no one controls any currency.
+Then block $B_1$ moves the blockchain to $S_1$ where its miner controls some newly created currency.
+Then block $B_2$ grants cryptocurrency to its miner and contains currency transfers between users of the currency.
+This process repeats until state $S_n$ is reached, which contains the current account-balance pairs of all the current users of a cryptocurrency.
 
 \input{tikz/state}
 
@@ -33,6 +52,16 @@ This is the problem we would like to solve: Can we provide a mechanism so that a
 
 \subsection{Related Work}
 
+% lightweight nodes in the bitcoin whitepaper
+
+% summary block in the main chain
+
+% miniblockchain
+
+% separate summary chain
+
+% coinprune 
+
 Our solution gains inspiration from a paper written by Matzutt et al. that provides a way to verify Bitcoin states.
 They suggest that recent miners be allowed to vote for a state and then bootstrapping nodes trust the majority of votes.
 Each vote is recorded in a block and each block has the capacity to store a single vote \cite{matzutt2020HowTSPrune}.
@@ -42,25 +71,3 @@ There are two problems with this idea.
 First, a vote can only be generated as quickly as new blocks.
 In Bitcoin, this averages to about 10 minutes per block, meaning a bootstrapping node might have to wait a week for there to be sufficiently many votes to trust a state.
 Second, this solution relies on implementation details in the Bitcoin protocol and may not apply to blockchains in general.
-
-\subsection{Project background}
-
-This project will continue my research from this summer as part of a Research Experiences for Undergraduates (REU) at Montana State University.
-My collaborators and I came up with the following idea.
-
-Like Matzutt and his collaborators, we allow recent miners to vote \cite{matzutt2020HowTSPrune}.
-However, we choose to store votes in a distributed hash table.
-Storing votes in a distributed hash table is convenient because it allows recent miners to vote immediately, but it also gives attackers an opportunity to delete votes.
-To combat vote deletion, we drew on the idea of a tangle \cite{popov2016tangle}.
-A tangle is a directed acyclic graph where the nodes are added to tangle by selecting the two most recently added nodes as parents.
-In this context, nodes are realized as votes.
-A tangle manager receives votes from recent miners and adds each of them to the tangle by attaching them to parent votes.
-
-\input{tikz/tangle}
-
-A vote is invalid if one if its parents is invalid or deleted.
-Deleting a vote causes a chain reaction in the tangle that deletes votes that support the attacker, preventing the attacker from swinging the election, by disproportionately deleting votes on one side of the election.
-A bootstrapping node can request the vote tangle and then make a decision based on valid votes.
-
-While we do have a sketch of a solution idea, more work needs to be done to prove its correctness and security as well as to demonstrate these properties through a practical implementation.
-Preliminary results indicate that it is resistant to some types of attacks but we need to consider smarter and more powerful attackers.

@@ -1,17 +1,18 @@
 \begin{abstract}
     % blockchains are interesting and useful
-    Blockchains provide a way to decentralize ledger-keeping systems.
-    They are best known for their use in cryptocurrencies, but blockchains also have applications in supply chain tracking, providing data integrity, and any situation where immutable data is useful.
+    Blockchains applications in cryptocurrencies, supply chain tracking, and providing data integrity.
+    The essential service provided by blockchain is a keeping an immutable, decentralized ledger.
     To provide immutability, some blockchains use Proof of Work to construct an ever growing chain of blocks in a peer to peer network.
     Miners are expected to expend computational work to create a new block.
     Since blocks are intentionally difficult to create, users of a blockchain can trust the information held in the longest blockchain.
 
     % problem with blockchains
-    Miners have collective control over a blockchain.
-    If miners are sufficiently decentralized, then only a large coalition of miners could  gain explicit control of a blockchain.
-    Explicit control allows the coalition to decide which blocks are added to the chain, reducing the integrity of the system.
+    By design, miners have collective control over a blockchain.
+    When miners are sufficiently decentralized, it is infeasible for a coalition of miners to gain explicit control of a blockchain.
+    Explicit control would allow a coalition to decide which blocks are added to the chain, reducing the integrity of the system.
     Thus a blockchain perform better when control of the chain is decentralized.
-    Decentralized mining can be difficult to achieve when blockchains grow to an unmanageable length.
+    % maybe get rid of this part
+    Decentralization can be difficult to achieve when blockchains grow to an unmanageable length.
     To begin mining, one must download and process the entire chain.
     This is not a problem when the chain is relatively small, but a larger chain (such as Bitcoin) can take days to process.
 

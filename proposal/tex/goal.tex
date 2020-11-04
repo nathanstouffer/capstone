@@ -1,2 +1,27 @@
-\section{Goal}
+\section{Goal}		% rename this
 \label{sec:goal}
+
+\subsection{Idea}
+
+This project will continue my research from this summer as part of a Research Experiences for Undergraduates (REU) at Montana State University.
+My collaborators and I came up with the following idea.
+
+Like Matzutt and his collaborators, we allow recent miners to vote \cite{matzutt2020HowTSPrune}.
+However, we choose to store votes in a distributed hash table.
+Storing votes in a distributed hash table is convenient because it allows recent miners to vote immediately, but it also gives attackers an opportunity to delete votes.
+To combat vote deletion, we drew on the idea of a tangle \cite{popov2016Tangle}.
+A tangle is a directed acyclic graph where the nodes are added to tangle by selecting the two most recently added nodes as parents.
+In this context, nodes are realized as votes.
+A tangle manager receives votes from recent miners and adds each of them to the tangle by attaching them to parent votes.
+
+\input{tikz/tangle}
+
+A vote is invalid if one if its parents is invalid or deleted.
+Deleting a vote causes a chain reaction in the tangle that deletes votes that support the attacker, preventing the attacker from swinging the election, by disproportionately deleting votes on one side of the election.
+A bootstrapping node can request the vote tangle and then make a decision based on valid votes.
+
+While we do have a sketch of a solution idea, more work needs to be done to prove its correctness and security as well as to demonstrate these properties through a practical implementation.
+Preliminary results indicate that it is resistant to some types of attacks but we need to consider smarter and more powerful attackers.
+
+\subsection{Implementation}
+
