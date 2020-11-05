@@ -6,32 +6,33 @@
 Recall that our goal is to devise an off-chain, efficient, and secure bootstrapping method.
 The primary barrier to this goal is that blockchains require that a miner obtain every block in the chain.
 Viewing blockchain as a finite state machine allows us to reduce the amount of information that a bootstrapping miner must obtain.
-To compute the current state $S_n$, one need only know is some state $S_k$ and every block following that state.
-In standard blockchains, that state is $S_0$ and the bootstrapping node needs every block.
-If $S_k$ is close to the end of the chain, then the miner only needs the blocks following $S_k$, a lot less data!
+To compute the current state $S_n$, one need only know is some state $S_k$ and every block $B_j$ with $j > k$.
+In standard blockchains, $S_k$ is $S_0$ and the bootstrapping node needs every block in the chain.
+If $S_k$ is close to the end of the chain, then the miner only needs the blocks following $S_k$, which will download much faster!
 
-At this point we have reduced the problem of bootstrapping to providing some recent state of the blockchain.
+At this point we have reduced the problem of bootstrapping to providing some recent state $S_k$ of the blockchain.
 How does a bootstrapping miner obtain the state $S_k$?
 They can't just ask a blockchain node, because the node might lie and give a false state.
 To solve this, we draw from \cite{matzutt2020HowTSPrune} and host an election at regular intervals (say every 1000 blocks).
-We allow recent miners to vote; they are identified by the public keys in the blocks they mined.
+We allow recent miners to vote (miners are identified by the public keys in the blocks they mined).
 If the election is for state $S_k$, then a miner computes the hash of their version of $S_k$.
-The miner submits a digital signature (using the private key from the block they created) of their vote so that an attacker cannot forge their vote.
+The miner submits a digital signature of the hash; the signature should use the private key from the block the miner created.
+The digital signature prevents a malicious actor from forging the vote.
 
 The election is decided based on the relative vote distribution.
 Let $V$ denote the total number of voters (not the number of votes cast).
 For a tuneable $\beta \in (0.5,1]$, we will decide an election if greater than $\lceil \beta V \rceil$ votes agree.
-However, we do not have every vote: voting is not required and votes can be deleted by malicious actors.
+However, we do not have every vote since voting is not required and votes can be deleted by malicious actors.
 Instead, we have a sample of votes.
 How can we figure out whether the sample was drawn from the required distribution?
 The $\chi ^2$ goodness of fit test is a way to measure the probability that a sample comes from an expected distribution.
-If the probability is above a tuneable threshold $\alpha$, we accept the most popular state.
+If the probability returned from the $\chi ^2$ test is above a tuneable threshold $\alpha$, we accept the state with the most votes.
 
 The votes are submitted to a Distributed Hash Table (DHT).
-Storing votes in a DHT is compromise: it is convenient because miners can vote at their leisure, but a powerful, malicious actor can delete votes.
+Storing votes in a DHT is a compromise: it is convenient because miners can vote at their leisure, but a powerful, malicious actor can delete votes.
 To combat vote deletion, we draw on the idea of a tangle \cite{popov2016Tangle}.
 A tangle is a directed acyclic graph where the vertices are added to tangle by selecting the two most recently added vertices as parents.
-In this context, vertices are realized as votes and a vote is valid only if both its parents are valid.
+In this context, vertices are realized as votes.
 
 \input{tikz/tangle}
 
@@ -39,14 +40,15 @@ A set of DHT nodes are designated as tangle managers, each given complete contro
 A voter is expected to submit their vote to a deterministic subset of the tangles.
 A tangle manager receives votes and inserts each of them to their tangle by attaching them to parent votes.
 If a vote is not in every tangle of the deterministic subset, then it is considered invalid.
+The children of an invalid vote are also invalid.
 Then, deleting a vote causes a chain reaction that invalidates all the descendant of the deleted vote.
 The distribution of states that the descendants support matches the distribution of cast votes, so a malicious actor cannot swing an election by selectively deleting votes.
 A bootstrapping node can request the vote tangles and then make a decision based on valid votes.
 
 \subsection{Implementation}
 
-The capstone project will also include a model implementation of our solution.
-The implementation will include a full-fledged DHT running on top of a network simulator.
+This capstone project will include a model implementation of the solution.
+The implementation will run a full-fledged DHT running on top of a network simulator.
 Scripted miners will submit votes to the DHT and bootstrapping nodes will request the tangles and decide the election.
 Using the simulation, we can gather empirical results indicating the security of our solution.
 The network simulator will allow us to gather information about the amount of network traffic required to facilitate an election.

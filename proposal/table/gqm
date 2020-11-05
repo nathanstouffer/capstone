@@ -1,4 +1,5 @@
 \begin{center}
+\begin{table}[h]
     \begin{tabular}{|ll|l|}
         \hline
         Goal & Purpose    & Decrease \\
@@ -18,4 +19,7 @@
                  & M5 & Empirical probability that a malicious actor fools a bootstrapping node \\
         \hline
     \end{tabular}
+    \caption{The Goal Question Metric approach for this project}
+    \label{tab:gqm}
+\end{table}
 \end{center}

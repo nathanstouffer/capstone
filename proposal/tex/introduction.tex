@@ -9,14 +9,6 @@
 % expected impact
 
 Blockchain was introduced in order to provide distributed consensus without relying on a central party~\cite{nakamoto2009Bitcoin}.
-Avoiding a central party provides two benefits.
-First, there is no central location that an attacker can access to compromise a system.
-A centralized blockchain is much easier to compromise than a decentralized blockchain.
-Second, there is no single party with complete control over a system.
-An example of where decentralized control is useful is in international currency exchange.
-Banks have the power to charge high transaction fees for international monetary transfers and customers are forced to pay the fees because there is no alternative.
-Legitimate cryptocurrencies have enough competition between parties (miners) that there is no room for a monopoly, giving customers a cheaper option.
-
 Bitcoin was released to the general public in 2009 as the first implementation of a blockchain.
 Bitcoin garnered a lot of support and quickly became one of the most prominent cryptocurrencies.
 Since Bitcoin's inception, blockchains have found other applications.
@@ -24,11 +16,21 @@ They are used in other cryptocurrencies, verify supply chains, and increase devi
 Blockchains are even being used to provide security and privacy in the medical field~\cite{siyal2019MedicalApplications}.
 Blockchain technology has the potential to enhance data security in a wide range of diverse applications.
 
+By design, blockchains are decentralized.
+Avoiding a central party provides two benefits.
+First, there is no central location for an attacker to compromise, giving blockchain a robustness that centralized systems struggle to achieve.
+Second, there is no single party with complete control over a system, preventing a monopoly of power.
+An example of where lacking a central party is useful is international currency exchange.
+Banks have the power to charge high transaction fees for international monetary transfers and customers are forced to pay the fees because there is no alternative.
+Instead, if one transfers money over a cryptocurrency, there is too much competition between parties (miners) for a monopoly to emerge.
+Since there is no monopoly, the market finds an fair equilibrium between miners and users.
+
 Blockchain’s services are best realized when control of the chain is decentralized.
 Decentralized control can become difficult to achieve when blockchains grow to an unmanageable size.
-I am writing this proposal to request funding to work on a method to truncate  blockchains.
-My work on this project will be a continuation from the REU research I collaborated on this summer.
-We have a solution sketch and a prototype implementation, but more work needs to be done to prove the correctness of the solution and to translate the prototype to a practical implementation.
-If successful, this project has the possibility of making blockchains more effective, extending data reliability and user privacy~\cite{cai2018DecentralizedApplications}~\cite{siyal2019MedicalApplications}.
+Joining a well-established blockchain can take days, excluding lightweight devices and reducing the likelihood a large device joins.
+This means a blockchain is less decentralized and prevents Internet of Things devices from participating in a blockchain network.
+This proposal provides and analyzes a new, off-chain, efficient, and secure method for joining a blockchain.
+If successful, this project contributes towards making blockchains more effective and increasing their decentralization.
+More effective blockchains can extend data reliability and user privacy~\cite{cai2018DecentralizedApplications}~\cite{siyal2019MedicalApplications}.
 
-The remaining sections provide information regarding background information, my plan, an estimated time line, and other logistical details.
+The remaining sections provide background information, our solution, our methodology, results, and a discussion of the results.
