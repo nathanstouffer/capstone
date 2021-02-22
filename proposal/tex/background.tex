@@ -7,11 +7,16 @@ At a high level, a blockchain is a sequence of blocks that is immutable in pract
 Immutability in blockchains is often provided through Proof of Work.
 Proof of Work was introduced in \cite{dwork1992PoW} and first used for blockchain in the Bitcoin whitepaper \cite{nakamoto2009Bitcoin}.
 In a Proof of Work blockchain, a block is valid if its cryptographic hash is below a preset threshold.
+The threshold is determined by the blockchain community.
+It is typically set such that mining a block takes the same amount of time, on average, throughout the life of a blockchain.
+The threshold will adapt as blocks are created to meet this requirement.
 Each block primarily consists of data that cannot change (financial transactions, medical records, etc).
-However, every block contains a field for a fixed-length string of bits called a nonce~\cite{nakamoto2009Bitcoin}.
-If someone finds a nonce such that the hash of the block is below the threshold, they have ``mined'' a block.
-Since the hash function is cryptographic, it is difficult to reverse.
+However, every block contains a field for a fixed-length string of arbitrary bits.
+The fixed length string is called a nonce~\cite{nakamoto2009Bitcoin}.
+``Mining'' a block consists of searching for a nonce that results in the hash of the block being below the threshold.
+By design, it is difficult to find such a nonce because the hash function is cryptographic.
 A miner's best strategy is to guess and check nonces until finding a sufficiently low output.
+In cryptocurrencies, miners are awarded currency for their work.
 Figure \ref{fig:blockchain} displays the typical structure of a blockchain.
 
 \input{tikz/blockchain}
@@ -22,10 +27,14 @@ Abstractly, the $k^{th}$ block $B_k$ is a transition from state $S_{k-1}$ to sta
 See Figure \ref{fig:statemachine} for a visual.
 A tangible example is a cryptocurrency.
 Cryptocurrencies realize state as a record of the amount of currency each public key controls.
-Blocks are a set of transactions that transfer currency between public keys.
+Blocks are a set of transactions that transfer currency between public keys (analogous to accounts).
 In state $S_0$, no one controls any currency.
-Then block $B_1$ moves the blockchain to $S_1$ where its miner controls some newly created currency.
-Then block $B_2$ grants cryptocurrency to its miner and contains currency transfers between users of the currency.
+Then block $B_1$ is created and its miner is granted some currency.
+This moves the blockchain to $S_1$ which records how much currency that miner controls.
+Then block $B_2$ is mined, granting cryptocurrency to its miner.
+Additionally, block $B_2$ could contain a currency transfer from the miner of the first block to another user.
+Then the state $S_2$ records how much funds each user of the cryptocurreny controls.
+Then block $B_3$ is created and the sate machine is updated with the changes in ``account'' balances.
 This process repeats until state $S_n$ is reached, which contains the current account-balance pairs of all the current users of a cryptocurrency.
 
 \input{tikz/state}
@@ -37,7 +46,7 @@ First, miners must obtain every block before mining new blocks.
 And, second, blockchains grow in perpetuity.
 These properties mean that new miners must download and process an ever increasing amount of data as time passes.
 Even now, when Bitcoin is just over a decade old, it can take days to become a miner. % maybe cite Bernardini but they have no source for that claim
-Such a barrier can deter large machines and entirely prevent small machines from mining.
+Such a barrier can deter large machines from the joining the chain and entirely prevent small machines from mining.
 
 The root of the problem is that mining requires all the information in a blockchain.
 Our goal is to produce an off-chain, efficient, and secure method to bootstrap miners in a blockchain.
@@ -58,6 +67,8 @@ At the operational level, a set of questions are asked that characterizes the go
 At the quantitative level, data is associated with questions in an attempt to answer them.
 The data can be either objective or subjective.
 Table \ref{tab:gqm} displays the Goal Question Metric Approach we will use for this project.
+
+\newpage 
 
 \input{table/gqm}
 

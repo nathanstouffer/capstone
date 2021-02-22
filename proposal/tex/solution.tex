@@ -4,7 +4,7 @@
 \subsection{Idea}
 
 Recall that our goal is to devise an off-chain, efficient, and secure bootstrapping method.
-The primary barrier to this goal is that blockchains require that a miner obtain every block in the chain.
+The primary barrier to this goal is that blockchains require that a miner to obtain every block in the chain.
 Viewing blockchain as a finite state machine allows us to reduce the amount of information that a bootstrapping miner must obtain.
 To compute the current state $S_n$, one need only know is some state $S_k$ and every block $B_j$ with $j > k$.
 In standard blockchains, $S_k$ is $S_0$ and the bootstrapping node needs every block in the chain.
@@ -14,7 +14,8 @@ At this point we have reduced the problem of bootstrapping to providing some rec
 How does a bootstrapping miner obtain the state $S_k$?
 They can't just ask a blockchain node, because the node might lie and give a false state.
 To solve this, we draw from \cite{matzutt2020HowTSPrune} and host an election at regular intervals (say every 1000 blocks).
-We allow recent miners to vote (miners are identified by the public keys in the blocks they mined).
+We allow recent miners to vote.
+Note that miners are identified by the public keys in the blocks they mined, preventing identity theft.
 If the election is for state $S_k$, then a miner computes the hash of their version of $S_k$.
 The miner submits a digital signature of the hash; the signature should use the private key from the block the miner created.
 The digital signature prevents a malicious actor from forging the vote.
