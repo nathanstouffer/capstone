@@ -55,7 +55,7 @@ epsilon      = 0.1                                              # dist added so 
 tri_height   = 0.075                                            # side length of a triangle
 
 out_str  = "\\begin{tikzpicture}[scale="                    # initialize output string
-out_str += str(tikz_scale) + "]"
+out_str += str(tikz_scale) + ",rotate=270]"
 out_str += "\n    %% vertices"
 verts = {}                                                  # store the vertices
 
