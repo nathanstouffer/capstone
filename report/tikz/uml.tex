@@ -1,39 +1,39 @@
-\newcommand{\operation}{$+$attack()}
+\newcommand{\operation}{$+$sortedVotes() : String[]}
 
 \begin{center}
 	\vspace{1em}
-    \begin{tikzpicture}
+    \begin{tikzpicture}[scale=0.9]
     % uml figure
 
-    % boxes (w,l) = (3,3)
-    \draw [very thick] (5,6) rectangle (8,9);
-    \node at (6.5,8.5) {Message};
-    \draw [thick] (5,8) -- (8,8);
-    \node at (6,7.65) {\operation};
+    % boxes (w,l) = (5,3)
+    \draw [very thick] (6,6) rectangle (11,9);
+    \node at (8.5,8.5) {IVoteSorter};
+    \draw [thick] (6,8) -- (11,8);
+    \node at (8.5,7.65) {\operation};
 
-    \draw [very thick] (0,0) rectangle (3,3);
-    \node at (1.5,2.5) {Create};
-    \draw [thick] (0,2) -- (3,2);
-    \node at (1,1.65) {\operation};
+    \draw [very thick] (0,0) rectangle (5,3);
+    \node at (2.5,2.5) {RndSorter};
+    \draw [thick] (0,2) -- (5,2);
+    \node at (2.5,1.65) {\operation};
 
-    \draw [very thick] (5,0) rectangle (8,3);
-    \node at (6.5,2.5) {Delete};
-    \draw [thick] (5,2) -- (8,2);
-    \node at (6,1.65) {\operation};
+    \draw [very thick] (6,0) rectangle (11,3);
+    \node at (8.5,2.5) {BFSSorter};
+    \draw [thick] (6,2) -- (11,2);
+    \node at (8.5,1.65) {\operation};
 
-    \draw [very thick] (10,0) rectangle (13,3);
-    \node at (11.5,2.5) {Reorder};
-    \draw [thick] (10,2) -- (13,2);
-    \node at (11,1.65) {\operation};
+    \draw [very thick] (12,0) rectangle (17,3);
+    \node at (14.5,2.5) {DescSorter};
+    \draw [thick] (12,2) -- (17,2);
+    \node at (14.5,1.65) {\operation};
 
     % lines
-    \draw [dashed, -{Triangle[open, width=3.5mm, length=3mm]}] (6.5,3) to (6.5,6);
+    \draw [dashed, -{Triangle[open, width=3.5mm, length=3mm]}] (8.5,3) to (8.5,6);
     %\draw [dashed, very thick] (6.5,3) -- (6.5,5.7);
-    \draw [dashed, very thick] (1.5,3) -- (1.5,4);
-    \draw [dashed, very thick] (1.5,4) -- (6.5,4);
-    \draw [dashed, very thick] (11.5,3) -- (11.5,4);
-    \draw [dashed, very thick] (11.5,4) -- (6.5,4);
+    \draw [dashed, very thick] (2.5,3) -- (2.5,4);
+    \draw [dashed, very thick] (2.5,4) -- (6.5,4);
+    \draw [dashed, very thick] (14.5,3) -- (14.5,4);
+    \draw [dashed, very thick] (14.5,4) -- (6.5,4);
 
     \end{tikzpicture}
-    \captionof{figure}{Strategy Pattern for network messages\label{fig:strategy}}
+    \captionof{figure}{Strategy Pattern for vote sorters\label{fig:strategy}}
 \end{center}
