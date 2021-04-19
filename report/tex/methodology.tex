@@ -40,9 +40,15 @@ Then we can use the $\chi ^2$ test to determine the probability that our sample 
 \subsection{Design}
 
 The design pattern that appears in this project is the Strategy Pattern.
-The design pattern presents itself in the different attack styles that we will simulate: creating votes, deleting votes, and reordering votes.
-We will have an adversary interface with a method callled \textit{attack()}.
-Each class that implements an attack type will implement that interface.
+The design pattern presents itself in the sorting styles used to generate the charts in Section \ref{sec:results}.
+We have no canonical ordering for the votes in a tangle so we implemented a number of them and chose between them.
+To make the code cleaner, we use the Strategy Pattern.
+We have an IVoteSorter interface with a method called \textit{sortedVotes()} that returns a sorted array of vote keys.
+Each class implements a different partial ordering that allows us to to sort the votes.
+The class RndSorter implements sorting by the vote's round.
+BFSSorter returns the order votes are encountered in a breath first search.
+Finally, DescSorter returns the votes in the order of the number of descendants each vote has.
+For the final charts, we decided to use the RndSorter class but the design pattern helped keep our code clean and organized.
 Figure \ref{fig:strategy} shows a visual of our Unified Modeling Language diagram for this pattern.
 
 \input{tikz/uml}
