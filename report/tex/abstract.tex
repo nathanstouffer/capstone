@@ -1,10 +1,11 @@
 \begin{abstract}
     % blockchains are interesting and useful
     Blockchains have applications in cryptocurrencies, supply chain tracking, and providing data integrity.
-    The essential service provided by a blockchain is keeping an immutable, decentralized ledger.
+    A blockchain provides an immutable, decentralized record.
     To provide immutability, some blockchains use Proof of Work to construct an ever growing chain of blocks in a peer-to-peer network.
-    Miners are expected to expend computational resources to create new blocks.
-    Since blocks are intentionally difficult to create, users of a blockchain can trust the information held in the longest blockchain.
+    Participants, known as miners, expend computational resources to create new blocks.
+    By design, users trust the longest blockchain and blocks are intentionally difficult to create.
+    As a result, data far back in the blockchain is immutable.
 
     % problem with blockchains
     By design, miners have collective, but not individual, control over a blockchain.
@@ -13,16 +14,17 @@
     Thus a blockchain performs better when control of the chain is decentralized.
     % maybe get rid of this part
     Decentralization can be difficult to achieve when blockchains grow to an unmanageable length.
-    To begin mining, one must download and process the entire chain.
-    This is not a problem when the chain is relatively small, but a larger chain (such as Bitcoin) can take days to process.
-	Such a long chain prevents lightweight devices from becoming miners and incredibly long bootstrapping time deters participation from users who do have sufficient space.
-    Together, these issues make joining a blockchain more difficult.
+    To begin mining, one must download and process the entire chain (a process called bootstrapping).
+    This is not a problem when the chain is relatively small, but a larger chain (such as Bitcoin) can take days to download and process.
+	Such a long chain prevents lightweight devices from becoming miners and incredibly long bootstrapping time deters participation from many users who do have sufficient space.
+    Together, these issues make joining a long blockchain more difficult.
 
     % idea for a solution
-    Over the summer, I worked with collaborators to devise a bootstrapping method that does not require every block.
+    Over the summer of 2020, I worked with collaborators to devise a faster bootstrapping method.
     At a high level, our solution has miners of recent blocks vote for a blockchain summary.
-    If sufficiently many votes agree, bootstrapping nodes can trust the blockchain summary and drastically reduce their bootstrapping time.
-    For my capstone project, I will complete the solution from this summer and implement a model of the solution.
-    Using the model, I will run simulations and extract experimental results.
+    If sufficiently many votes agree, bootstrapping nodes can trust the blockchain summary and no longer need to download the entire chain.
+    This drastically reduces bootstrapping time.
+    For my capstone project, I continued the solution from the previous summer and implemented a model of the solution.
+    Using the model, I ran simulations and extracted experimental results.
 \end{abstract}
 \newpage

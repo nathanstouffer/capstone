@@ -6,12 +6,12 @@
 At a high level, a blockchain is a sequence of blocks that is immutable in practical applications.
 Immutability in blockchains is often provided through Proof of Work.
 Proof of Work was introduced in \cite{dwork1992PoW} and first used for blockchain in the Bitcoin whitepaper \cite{nakamoto2009Bitcoin}.
-In a Proof of Work blockchain, a block is valid if its cryptographic hash is below a preset threshold.
-The threshold is determined by the blockchain community.
+In a Proof of Work blockchain, a block is valid if its cryptographic hash is below a preset threshold, determined by a blockchain's community.
 It is typically set such that mining a block takes the same amount of time, on average, throughout the life of a blockchain.
 The threshold will adapt as blocks are created to meet this requirement.
-Each block primarily consists of data that cannot change (financial transactions, medical records, etc).
-However, every block contains a field for a fixed-length string of arbitrary bits.
+Each block primarily consists of a payload of data that is recorded (financial transactions, medical records, etc).
+In addition to the payload, a block records the hash of the previous block, tying the blocks together in a chain.
+Every block also contains a field for a fixed-length string of arbitrary bits.
 The fixed length string is called a nonce~\cite{nakamoto2009Bitcoin}.
 ``Mining'' a block consists of searching for a nonce that results in the hash of the block being below the threshold.
 By design, it is difficult to find such a nonce because the hash function is cryptographic.
@@ -25,19 +25,20 @@ A broader perspective of a blockchain is an implementation of a finite state mac
 In the state machine, blocks are transitions between the states of applications running on top of a blockchain.
 Abstractly, the $k^{th}$ block $B_k$ is a transition from state $S_{k-1}$ to state $S_k$ with certain validity requirements.
 See Figure \ref{fig:statemachine} for a visual.
+
+\input{tikz/state}
+
 A tangible example is a cryptocurrency.
 Cryptocurrencies realize state as a record of the amount of currency each public key controls.
 Blocks are a set of transactions that transfer currency between public keys (analogous to accounts).
 In state $S_0$, no one controls any currency.
 Then block $B_1$ is created and its miner is granted some currency.
-This moves the blockchain to $S_1$ which records how much currency that miner controls.
+This moves the blockchain to $S_1$ which reports how much currency that miner controls.
 Then block $B_2$ is mined, granting cryptocurrency to its miner.
 Additionally, block $B_2$ could contain a currency transfer from the miner of the first block to another user.
 Then the state $S_2$ records how much funds each user of the cryptocurreny controls.
 Then block $B_3$ is created and the sate machine is updated with the changes in ``account'' balances.
 This process repeats until state $S_n$ is reached, which contains the current account-balance pairs of all the current users of a cryptocurrency.
-
-\input{tikz/state}
 
 \subsection{Technical Problem}
 
@@ -120,4 +121,4 @@ Storing votes in blocks makes them immutable, so a bootstrapping node is able to
 The issues with this idea are two-fold.
 First, a vote can only be generated as quickly as new blocks.
 In Bitcoin, this averages to about 10 minutes per block~\cite{nakamoto2009Bitcoin}, meaning a bootstrapping node might have to wait a week for there to be sufficiently many votes to trust a state.
-Second, \cite{matzutt2020HowTSPrune} relies on implementation details in the Bitcoin protocol and does not apply to blockchains in general.
+Second, \cite{matzutt2020HowTSPrune} relies on implementation details in the Bitcoin protocol and do not apply to blockchains in general.
