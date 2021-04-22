@@ -33,6 +33,16 @@ axes[0,0].set_title("Algorand")
 axes[0,1].set_title("Bitcoin")
 axes[0,2].set_title("Ethereum")
 
+# set y ranges
+prop_ylim = [ -0.02, 0.32 ]
+vote_ylim = [ -50, 1050 ]
+axes[0,0].set_ylim(prop_ylim)
+axes[0,1].set_ylim(prop_ylim)
+axes[0,2].set_ylim(prop_ylim)
+axes[1,0].set_ylim(vote_ylim)
+axes[1,1].set_ylim(vote_ylim)
+axes[1,2].set_ylim(vote_ylim)
+
 # set labels
 axes[0,0].set_ylabel("Proportional gain")
 axes[1,0].set_ylabel("Number of valid votes")
@@ -40,6 +50,6 @@ axes[1,0].set_xlabel("Number of dishonest managers")
 axes[1,1].set_xlabel("Number of dishonest managers")
 axes[1,2].set_xlabel("Number of dishonest managers")
 
-fig.suptitle("Proportional gain and Number of valid votes with a rejecting strategy", fontsize=14)
+fig.suptitle("Proportional gain and number of remaining valid votes using a deleting strategy", fontsize=14)
 
 plt.show()

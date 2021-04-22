@@ -37,10 +37,15 @@ axes[1,0].set_xticklabels(xlabels)
 axes[1,1].set_xticklabels(xlabels)
 axes[1,2].set_xticklabels(xlabels)
 
-# set y limit
-axes[0,0].set_ylim([-0.6, 0.6])
-axes[0,1].set_ylim([-0.6, 0.6])
-axes[0,2].set_ylim([-0.6, 0.6])
+# set y ranges
+prop_ylim = [ -0.65, 0.65 ]
+vote_ylim = [ -50, 1050 ]
+axes[0,0].set_ylim(prop_ylim)
+axes[0,1].set_ylim(prop_ylim)
+axes[0,2].set_ylim(prop_ylim)
+axes[1,0].set_ylim(vote_ylim)
+axes[1,1].set_ylim(vote_ylim)
+axes[1,2].set_ylim(vote_ylim)
 
 # set title
 axes[0,0].set_title("Algorand")
@@ -54,6 +59,6 @@ axes[1,0].set_xlabel("Deleted vote's round")
 axes[1,1].set_xlabel("Deleted vote's round")
 axes[1,2].set_xlabel("Deleted vote's round")
 
-fig.suptitle("Proportional gain and Number of valid votes with a deleting strategy", fontsize=14)
+fig.suptitle("Proportional gain and number of remaining valid votes using a deleting strategy", fontsize=14)
 
 plt.show()
