@@ -1,0 +1,4 @@
+num_votes,1000
+num_valid_votes,1000
+num_honest_votes,693
+num_dishonest_votes,307

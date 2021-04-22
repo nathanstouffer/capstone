@@ -1,0 +1,5 @@
+blockchain,NUM_DHT_NODES,total_time
+algorand,10,1024.91832805
+algorand,25,2173.80764294
+algorand,50,4214.13788319
+algorand,100,10131.7532601

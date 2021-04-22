@@ -1,0 +1,5 @@
+blockchain,NUM_DHT_NODES,num_votes,num_valid_votes,num_honest_votes,num_dishonest_votes
+algorand,10,1000,1000,839,161
+algorand,25,1000,1000,855,145
+algorand,50,1000,1000,808,192
+algorand,100,1000,1000,789,211

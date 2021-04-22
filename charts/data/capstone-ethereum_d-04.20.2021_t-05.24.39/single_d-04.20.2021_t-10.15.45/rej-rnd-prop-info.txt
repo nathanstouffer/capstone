@@ -1,0 +1,2 @@
+point format -- num dishonest managers, proportional gain, number of valid votes
+1,0.0,994:2,0.025700033,994:3,0.05618435,994:4,0.09872317,994:5,0.1439544,994:6,0.20323965,994:7,0.27070823,994:
