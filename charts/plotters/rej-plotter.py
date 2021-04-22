@@ -50,6 +50,6 @@ axes[1,0].set_xlabel("Number of dishonest managers")
 axes[1,1].set_xlabel("Number of dishonest managers")
 axes[1,2].set_xlabel("Number of dishonest managers")
 
-fig.suptitle("Proportional gain and number of remaining valid votes using a deleting strategy", fontsize=14)
+fig.suptitle("Proportional gain and number of remaining valid votes using a rejecting strategy", fontsize=14)
 
 plt.show()
