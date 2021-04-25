@@ -1,0 +1,257 @@
+\section{Appendix}
+\label{sec:appendix}
+
+Here is the source file for the very important Tangle data structure.
+If you would like to see the rest of the code base, I can give you access to the repository.
+I chose not to include more files because I think the source code amounts to about 50 pages of text.
+
+\begin{Verbatim}
+
+package tangly;
+
+import java.io.*;
+import java.util.Hashtable;
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.Arrays;
+
+import tangly.util.*;
+import static tangly.util.Functions.*;
+
+public class Tangle implements Serializable {
+
+// STATIC VARIABLES
+
+private static String ROOT0 = 
+        bytesToHexString(sha256("00000".getBytes()));	
+private static String ROOT1 = 
+        bytesToHexString(sha256("11111".getBytes()));
+
+// CLASS VARIABLES
+
+private String tangle_loc;
+private Hashtable<String, Vertex> ht;
+private ArrayList<String> tips;
+
+// CONSTRUCTOR
+
+public Tangle(String tangle_loc) {
+ this.tangle_loc = tangle_loc;
+ this.ht = new Hashtable<String, Vertex>();		
+ this.tips = new ArrayList<String>();	
+ this.tips.add(Tangle.ROOT0);
+ this.tips.add(Tangle.ROOT1);
+}
+
+// static method to return a deserialized version of the tangle
+// should be used by someone who has a serialized version of a tangle
+// and needs to instantiate tangle vote in memory. This could be used
+// by a DHT node recieving a tangle from another node or a 
+// deciding node recieving tangles from the DHT
+public static Tangle deserialize(byte[] serialized) {
+ try {
+  ByteArrayInputStream bis = new ByteArrayInputStream(serialized);
+  ObjectInputStream ois = new ObjectInputStream(bis);
+  Tangle recon = (Tangle) ois.readObject();
+  return recon;
+ } catch(IOException e){ 
+  System.err.println("caught exception: " + e);
+ } catch(ClassNotFoundException e){
+  System.err.println("caught exception: " + e);
+ }
+ return null;
+}
+
+// PUBLIC METHODS
+
+// method to serialize tangle for transmission
+public byte[] serialize() {
+ try{
+  ByteArrayOutputStream bos = new ByteArrayOutputStream();
+  ObjectOutputStream oos = new ObjectOutputStream(bos);
+  oos.writeObject(this);
+  oos.close();
+  return bos.toByteArray();
+ } catch(FileNotFoundException e){
+  System.err.println("caught exception: " + e);
+ } catch(IOException e){
+  System.err.println("caught exception: " + e);
+ }
+ return new byte[0];
+}
+
+// method to insert a vote into the tangle
+public void insert(Vertex v) {
+ this.ht.put(v.identifierH(), v);
+ this.tips.add(v.identifierH());
+ if (this.tips.size() > 2) { this.tips.remove(v.parent1H()); }
+ if (this.tips.size() > 2) { this.tips.remove(v.parent2H()); }
+}
+
+// method to return the next two tips that should be used
+public String[] nextTips() {
+ return new String[] { new String(this.tips.get(0)), 
+                       new String(this.tips.get(1)) };
+}
+
+// method to mark the vote at key as invalid
+public void markInvalid(String key) {
+ if (this.contains(key)) { this.ht.get(key).vote().markInvalid(); }
+ else { System.err.println("No such key in hash table"); }
+}
+
+// method to mark the vote at key as deleted
+public void markDeleted(String key) {
+ if (this.contains(key)) {
+ this.ht.get(key).vote().markInvalid();
+ this.ht.get(key).vote().markDeleted();
+}
+ else { System.err.println("No such key in hash table"); }
+}
+
+// method to return whether the desired vote is in the tangle
+public boolean contains(String key) {
+ if (key.equals(Tangle.ROOT0) || key.equals(Tangle.ROOT1)) { 
+  return true; 
+ }
+ if (this.ht.containsKey(key)) {
+  if (!this.ht.get(key).vote().isMarkedDeleted()) {
+   return true;
+  }
+  else { return false; }
+ }
+ else { return false; }
+}
+
+// method to return whether the desired vote is in the tangle
+public boolean contains(Vote vote) {
+ return this.contains(vote.identifierH());
+}
+
+// method to return whether the desired vertex is in the tangle
+public boolean contains(Vertex vert) {
+ return this.contains(vert.identifierH());
+}
+
+// method to populate the children of each vote with the 
+// reverse of the parents
+public void populateChildren() {
+ this.clearChildren();						
+ for (String child : this.keySet()) {
+  Vertex v    = this.ht.get(child);	
+  String p1 = v.parent1H();			
+  String p2 = v.parent2H();
+  if (!p1.equals(Tangle.ROOT0) && !p1.equals(Tangle.ROOT1)) {	 
+   this.ht.get(p1).addChild(child);					
+  }
+  if (!p2.equals(Tangle.ROOT0) && !p2.equals(Tangle.ROOT1)) {
+   this.ht.get(p2).addChild(child);
+  }
+ }
+}
+
+// method to return the keys of all votes that have been marked as invalid
+public ArrayList<String> invalidKeys() {
+ ArrayList<String> invalid = new ArrayList<String>();
+ for (String key : this.keySet()) {
+  if (this.ht.get(key).vote().isMarkedInvalid()) { invalid.add(key); }
+ }
+ return invalid;
+}
+
+public ArrayList<String> validKeys() {
+ ArrayList<String> valid = new ArrayList<String>();
+ for (String key : this.keySet()) {
+  if (!this.ht.get(key).vote().isMarkedInvalid()) { valid.add(key); }
+ }
+ return valid;
+}
+
+// PRIVATE METHODS
+
+// method to clear the children of each vote
+private void clearChildren() {
+ Set<String> keys = this.keySet();
+ for (String key : keys) { this.ht.get(key).clearChildren(); }
+}
+
+// method to return the number of votes in given round in the ancestry of the seeds
+public int numVotesInRound(int num_rnds, int p_round, String[] seeds) {
+ int counter = 0;
+ Hashtable<String, Boolean> added = new Hashtable<String, Boolean>();
+ ArrayList<String> queue = new ArrayList<String>();	
+ for (int s = 0; s < seeds.length; s++) {
+  queue.add(seeds[s]);
+  added.put(seeds[s], true);
+ }
+ for (int q = 0; q < queue.size(); q++) {
+  String key = queue.get(q);										
+  if (!key.equals(Tangle.ROOT0) && !key.equals(Tangle.ROOT1)) {
+   Vertex vert = this.ht.get(key);								
+   int rnd = round(num_rnds, this.tangle_loc, vert.vote());	
+   if (rnd == p_round) { counter++; }							
+   if (!added.containsKey(vert.parent1H())) {					
+    queue.add(vert.parent1H());
+    added.put(vert.parent1H(), true);
+   }
+   if (!added.containsKey(vert.parent2H())) {					
+    queue.add(vert.parent2H());
+    added.put(vert.parent2H(), true);
+   }
+  }
+ }
+ return counter;
+}
+
+// method that returns whether there are enough votes in the
+// ancestry of the seeds to satisfy the min_votes requirement
+public boolean atLeastMinVotes(int num_rnds, int min_votes, 
+                               int p_round, String[] seeds) {
+ int counter = 0;
+ Hashtable<String, Boolean> added = new Hashtable<String, Boolean>();
+ ArrayList<String> queue = new ArrayList<String>();						
+ for (int s = 0; s < seeds.length; s++) {
+  queue.add(seeds[s]);
+  added.put(seeds[s], true);
+ }
+ for (int q = 0; q < queue.size(); q++) {								
+  String key = queue.get(q);										
+  if (!key.equals(Tangle.ROOT0) && !key.equals(Tangle.ROOT1)) {
+   Vertex vert = this.ht.get(key);								
+   int rnd = round(num_rnds, this.tangle_loc, vert.vote());	
+   if (rnd == p_round) { counter++; }							
+   if (!added.containsKey(vert.parent1H())) {					
+    queue.add(vert.parent1H());
+    added.put(vert.parent1H(), true);
+   }
+   if (!added.containsKey(vert.parent2H())) {					
+    queue.add(vert.parent2H()); 
+    added.put(vert.parent2H(), true);
+   }
+  }
+  if (counter >= min_votes) { return true; }
+ }
+ return (counter >= min_votes);
+}
+
+// GETTER METHODS
+
+public Set<String> keySet()   { return this.ht.keySet(); }
+public Vertex get(String key) { return this.ht.get(key); }
+public String getTangleLoc()  { return this.tangle_loc; }
+
+// STRING METHODS
+
+public String toString() {
+ String ret = new String(this.tangle_loc + "\n");
+ for (String key : this.keySet()) {
+  ret += this.ht.get(key).toString();
+ }
+ return ret;
+}
+
+}
+
+
+
+\end{Verbatim}

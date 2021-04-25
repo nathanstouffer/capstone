@@ -53,12 +53,13 @@ axes[0,1].set_title("Bitcoin")
 axes[0,2].set_title("Ethereum")
 
 # set labels
-axes[0,0].set_ylabel("Proportional gain")
-axes[1,0].set_ylabel("Number of valid votes")
-axes[1,0].set_xlabel("Deleted vote's round")
-axes[1,1].set_xlabel("Deleted vote's round")
-axes[1,2].set_xlabel("Deleted vote's round")
+size = 14
+axes[0,0].set_ylabel("Proportional gain", fontsize=size)
+axes[1,0].set_ylabel("Number of valid votes", fontsize=size)
+axes[1,0].set_xlabel("Deleted vote's round", fontsize=size)
+axes[1,1].set_xlabel("Deleted vote's round", fontsize=size)
+axes[1,2].set_xlabel("Deleted vote's round", fontsize=size)
 
-fig.suptitle("Proportional gain and number of remaining valid votes using a deleting strategy", fontsize=14)
+#fig.suptitle("Proportional gain and number of remaining valid votes using a deleting strategy", fontsize=14)
 
 plt.show()

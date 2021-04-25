@@ -44,12 +44,13 @@ axes[1,1].set_ylim(vote_ylim)
 axes[1,2].set_ylim(vote_ylim)
 
 # set labels
-axes[0,0].set_ylabel("Proportional gain")
-axes[1,0].set_ylabel("Number of valid votes")
-axes[1,0].set_xlabel("Number of dishonest managers")
-axes[1,1].set_xlabel("Number of dishonest managers")
-axes[1,2].set_xlabel("Number of dishonest managers")
+size = 14
+axes[0,0].set_ylabel("Proportional gain", fontsize=size)
+axes[1,0].set_ylabel("Number of valid votes", fontsize=size)
+axes[1,0].set_xlabel("Number of dishonest managers", fontsize=size)
+axes[1,1].set_xlabel("Number of dishonest managers", fontsize=size)
+axes[1,2].set_xlabel("Number of dishonest managers", fontsize=size)
 
-fig.suptitle("Proportional gain and number of remaining valid votes using a rejecting strategy", fontsize=14)
+#fig.suptitle("Proportional gain and number of remaining valid votes using a rejecting strategy", fontsize=14)
 
 plt.show()
