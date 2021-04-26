@@ -18,24 +18,16 @@ This is not strictly necessary but we felt that it made our results more applica
 A neglected detail of the solution is the process of selecting parents in the tangle.
 The tangle manager has complete control over \textit{which} votes are selected as parents, but we require that the parents are digitally signed in the vote.
 This means that the manager must tell the voter which votes are the parents and the voter includes that information in their vote.
-While this is some overhead communication for our solution, it prevents a malicious actor from changing the structure of a tangle to their advantage.
+While this introduces some overhead communication for our solution, it prevents a malicious actor from changing the structure of a tangle to their advantage.
 
 % attacker intelligence
 
 The most important aspect of the implementation is the intelligence of the attackers.
 We expect the constraints of our solution to prevent an attacker from \textit{successfully} fooling a bootstrapping node.
 But the only way we can verify this is to simulate intelligent attackers.
-We have divided attacks into three categories: creating votes, deleting votes, and reordering votes.
+We have divided attacks into two categories: deleting votes and rejecting votes.
 An accurate replication of this project should at least implement these strategies.
 Implementing more strategies is welcome, since it provides more information on our system!
-
-% chi-squared test
-
-We used the $\chi ^2$ test as follows.
-Consider some sample of votes $S$ and our expected proportion of agreeing votes $\beta$.
-Our distribution comes in the form $(majority, other)$ where $majority$ references the number of valid votes that supported the most popular state and $other$ is the number of valid votes that did not support the most popular state.
-We have an expected distribution $(\beta|S|, (1-\beta)|S|)$ and an actual distribution of $(S_{maj}, S_{oth})$.
-Then we can use the $\chi ^2$ test to determine the probability that our sample comes from the expected distribution.
 
 \subsection{Design}
 

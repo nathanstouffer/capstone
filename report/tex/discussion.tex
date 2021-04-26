@@ -2,3 +2,20 @@
 \label{sec:discussion}
 
 % complement results with opinions and reasoning
+
+The time and space requirements for our protocol are significantly less than current bootstrapping systems.
+As previously noted, joining Bitcoin can take multiple days whereas our voting system has the possibility of verifying a state within 1000 seconds (although we should recall that this is only a lower bound).
+We should note that this is not the bootstrapping time, just the time required to verify a blockchain state.
+However, the verified state eliminates the need for any blocks prior to the state is attached to, drastically reducing time and space requirements.
+
+The effectiveness of the deleting strategy ran as expected.
+The graphs in Figure \ref{fig:deleter} show that, as long as we require a minimum number of votes to be valid, we do not have to worry about dishonest managers deleting votes since they will not be able to affect the ratio.
+
+The rejecting strategy is much more concerning.
+It was expected that rejecting would be more effective than deleting because deleting is such a naive strategy.
+A 25\% gain (seen in Figure \ref{fig:rejecter}) gives too much power to an attacker.
+We do believe that this obstacle can be overcome.
+There are a lot of system parameters involved in the simulation and we just used fixed values for these experiments.
+We suspect that increasing the threshold $t$ for the number of votes in the previous round combats the ability of the rejecter to gain so much power.
+On the other hand, it also means the system is less likely to reach consensus because $t$ might large enough to stop tangle progress altogether.
+Regardless, messing around with the system parameters is necessary before the true effectiveness of the protocol can be established.

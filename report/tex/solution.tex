@@ -26,27 +26,36 @@ For a tuneable $\beta \in (0.5,1]$, we will decide an election if greater than $
 However, we do not have every vote since voting is not required and votes can be deleted by malicious actors.
 Instead, we have a sample of votes.
 How can we figure out whether the sample was drawn from the required distribution?
-The $\chi ^2$ goodness of fit test is a way to measure the probability that a sample comes from an expected distribution.
-If the probability returned from the $\chi ^2$ test is above a tuneable threshold $\alpha$, we accept the state with the most votes.
+Initially we were going to use the $\chi ^2$ goodness-of-fit test but this uses an independence assumption that we are not able to meet.
+We realized this just recently and are working on figuring out a new way to determine in the sample was drawn from the true distribution.
 
 The votes are submitted to a Distributed Hash Table (DHT).
 Storing votes in a DHT is a compromise: it is convenient because miners can vote at their leisure, but a powerful, malicious actor can delete votes.
-To combat vote deletion, we draw on the idea of a tangle \cite{popov2016Tangle}.
+To combat vote deletion, we create vote dependencies by drawing on the idea of a tangle \cite{popov2016Tangle}.
 A tangle is a directed acyclic graph where the vertices are added to tangle by selecting the two most recently added vertices as parents.
 In this context, vertices are realized as votes.
+See Figure \ref{fig:tangle} for a visual.
 
 \input{tikz/tangle}
 
 A set of DHT nodes are designated as tangle managers, each given complete control of their own tangle.
-A voter is expected to submit their vote to a deterministic subset of the tangles.
+A voter is expected to submit their vote to two deterministically selected tangles, we call these the vote and the vote's sibling.
 A tangle manager receives votes and inserts each of them to their tangle by attaching them to parent votes.
 If a vote is not in every tangle of the deterministic subset, then it is considered invalid.
 The children of an invalid vote are also invalid.
-Then, deleting a vote causes a chain reaction that invalidates all the descendant of the deleted vote.
+Then, deleting a vote causes a chain reaction that invalidates all the descendant of the deleted vote (see Figure \ref{fig:poisoning} for a visual).
 The distribution of states that the descendants support matches the distribution of cast votes, so a malicious actor cannot swing an election by selectively deleting votes.
 A bootstrapping node can request the vote tangles and then make a decision based on valid votes.
 
 \input{tikz/extending/extended}
+
+In addition to submitting votes to different tangles, votes are subdivided into rounds.
+Each vote must be cast in its round so that the tangle progresses in a nice fashion (as in Figure \ref{fig:tangle}).
+To determine if a vote is the correct rounds, we have a threshold $t \in \mathbb{N}$.
+If a vote is in round $k$, there must be at least $t$ votes in round $k-1$ in the ancestry of the vote.
+This has two effects.
+First, it ensures the tangle grows ``linearly'' and doesn't just expand in a bunch of different directions.
+Second, it ensures that no miner can submit all their votes at the beginning of the election and then delete everything submitted after their votes.
 
 \subsection{Implementation}
 
